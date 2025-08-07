@@ -1,9 +1,9 @@
 name: shitead
 description: "A modern Flutter package for building interactive passenger seat layouts with driver seat, selection functionality, and detailed seat information modals. Perfect for bus booking, cinema reservations, and airline seat selection apps."
-version: 0.0.3
-homepage: https://github.com/your-username/shitead
-repository: https://github.com/your-username/shitead
-issue_tracker: https://github.com/your-username/shitead/issues
+version: 0.0.4
+homepage: https://github.com/prasanna89654/shitead
+repository: https://github.com/prasanna89654/shitead
+issue_tracker: https://github.com/prasanna89654/shitead/issues
 documentation: https://pub.dev/documentation/shitead/latest/
 
 environment:
