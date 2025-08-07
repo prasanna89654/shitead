@@ -48,7 +48,7 @@ class SeatWidget extends StatelessWidget {
         break;
       case SeatStatus.booked:
         backgroundColor = Colors.red[400]!;
-        borderColor = Colors.red[600]!;
+        borderColor = Colors.red[200]!;
         textColor = Colors.white;
         break;
       case SeatStatus.unavailable:
@@ -74,6 +74,9 @@ class SeatWidget extends StatelessWidget {
           decoration: !showBorder
               ? null
               : BoxDecoration(
+                  color: seat.status == SeatStatus.selected
+                      ? backgroundColor.withValues(alpha: 0.2)
+                      : null,
                   border: Border.all(color: borderColor, width: 1.5),
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -265,7 +265,7 @@ class _SeatLayoutState extends State<SeatLayout> {
 
         const SizedBox(height: 16),
 
-        // Passenger seats section
+        // Bus Layout
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -273,13 +273,13 @@ class _SeatLayoutState extends State<SeatLayout> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Passenger Seats',
+                  'Bus Seats',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildSeatGrid(),
+                _buildBusLayout(),
               ],
             ),
           ),
@@ -313,7 +313,6 @@ class _SeatLayoutState extends State<SeatLayout> {
             ),
           ),
         ],
-     
       ],
     );
   }
@@ -344,26 +343,39 @@ class _SeatLayoutState extends State<SeatLayout> {
     );
   }
 
-  Widget _buildSeatGrid() {
+  Widget _buildBusLayout() {
     final passengerSeats = _seats.where((seat) => !seat.isDriver).toList();
-    final rows = <List<Seat>>[];
-
-    // Group seats by row
-    for (int i = 0; i < passengerSeats.length; i += widget.seatsPerRow) {
-      final end = (i + widget.seatsPerRow).clamp(0, passengerSeats.length);
-      rows.add(passengerSeats.sublist(i, end));
-    }
+    final driverSeat = widget.showDriverSeat
+        ? _seats.firstWhere((seat) => seat.isDriver, orElse: () => _seats.first)
+        : null;
 
     return Column(
-      children: rows.map((row) {
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: widget.seatSpacing / 2),
+      children: [
+        // Top row: 2 seats on left + empty space + driver seat on right
+        _buildTopRow(passengerSeats, driverSeat),
+
+        const SizedBox(height: 16),
+
+        // Main seating area with aisle
+        _buildMainSeatingArea(passengerSeats),
+      ],
+    );
+  }
+
+  Widget _buildTopRow(List<Seat> passengerSeats, Seat? driverSeat) {
+    // Get first 2 passenger seats for top left
+    final topLeftSeats = passengerSeats.take(2).toList();
+
+    return Row(
+      children: [
+        // Top left seats (2 seats)
+        Expanded(
+          flex: 2,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: row.map((seat) {
+            children: topLeftSeats.map((seat) {
               return Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: widget.seatSpacing / 2),
+                padding: EdgeInsets.symmetric(horizontal: widget.seatSpacing),
                 child: SeatWidget(
                   seat: seat,
                   showBorder: true,
@@ -373,8 +385,102 @@ class _SeatLayoutState extends State<SeatLayout> {
               );
             }).toList(),
           ),
+        ),
+
+        // Empty space in middle
+        const Expanded(flex: 1, child: SizedBox()),
+
+        // Driver seat on top right
+        if (widget.showDriverSeat && driverSeat != null)
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: SeatWidget(
+                seat: driverSeat,
+                showBorder: true,
+                onTap: () => _onSeatTapped(driverSeat),
+                size: 50,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildMainSeatingArea(List<Seat> passengerSeats) {
+    // Skip first 2 seats (they're in top row)
+    final mainSeats = passengerSeats.skip(2).toList();
+    final rows = <List<Seat>>[];
+
+    // Group remaining seats by rows of 4 (2 left + 2 right)
+    for (int i = 0; i < mainSeats.length; i += 4) {
+      final end = (i + 4).clamp(0, mainSeats.length);
+      rows.add(mainSeats.sublist(i, end));
+    }
+
+    return Column(
+      children: rows.map((row) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: widget.seatSpacing / 2),
+          child: _buildBusRow(row),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildBusRow(List<Seat> rowSeats) {
+    // Split seats: first 2 go to left, next 2 go to right
+    final leftSeats = rowSeats.take(2).toList();
+    final rightSeats = rowSeats.skip(2).take(2).toList();
+
+    return Row(
+      children: [
+        // Left side seats
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: leftSeats.map((seat) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: widget.seatSpacing, vertical: 5),
+                child: SeatWidget(
+                  seat: seat,
+                  showBorder: true,
+                  onTap: () => _onSeatTapped(seat),
+                  size: widget.seatSize,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+
+        // Aisle (empty space)
+        const Expanded(
+          flex: 1,
+          child: Center(),
+        ),
+
+        // Right side seats
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: rightSeats.map((seat) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: widget.seatSpacing, vertical: 5),
+                child: SeatWidget(
+                  seat: seat,
+                  showBorder: true,
+                  onTap: () => _onSeatTapped(seat),
+                  size: widget.seatSize,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }

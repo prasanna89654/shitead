@@ -30,7 +30,7 @@ class SeatLayoutDemo extends StatefulWidget {
 
 class _SeatLayoutDemoState extends State<SeatLayoutDemo> {
   List<Seat> selectedSeats = [];
-  int numberOfSeats = 20;
+  int numberOfSeats = 22;
   int seatsPerRow = 4;
   bool allowMultipleSelection = true;
 
@@ -46,6 +46,7 @@ class _SeatLayoutDemoState extends State<SeatLayoutDemo> {
         child: SeatLayout(
           numberOfSeats: numberOfSeats,
           seatsPerRow: seatsPerRow,
+          seatSpacing: 8,
           showDriverSeat: true,
           allowMultipleSelection: allowMultipleSelection,
           onSeatSelectionChanged: (seats) {
@@ -53,11 +54,11 @@ class _SeatLayoutDemoState extends State<SeatLayoutDemo> {
               selectedSeats = seats;
             });
           },
-          seatSize: 30,
+          seatSize: 25,
           // Example of pre-booked seats
-          bookedSeats: const ['seat_3', 'seat_7'],
+          bookedSeats: const ['seat_3', 'seat_7', 'seat_19', 'seat_22'],
           // Example of unavailable seats
-          unavailableSeats: const ['seat_15'],
+          unavailableSeats: const ['seat_15', 'seat_21', 'seat_18'],
           // Example of custom passenger names
           passengerNames: const {
             'driver': 'John Driver',
