@@ -7,13 +7,6 @@
       "request": "launch",
       "program": "lib/main.dart",
       "cwd": "example"
-    },
-    {
-      "name": "Example App (Quick Demo)",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/quick_demo.dart",
-      "cwd": "example"
     }
   ]
 }

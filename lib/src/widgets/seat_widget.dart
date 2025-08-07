@@ -83,8 +83,8 @@ class SeatWidget extends StatelessWidget {
           child: seat.status == SeatStatus.driver
               ? SvgPicture.asset(
                   'assets/svg/driver.svg',
-                  width: size,
-                  height: size,
+                  width: showBorder ? size + 25 : size - 6,
+                  height: showBorder ? size + 25 : size - 6,
                   colorFilter: ColorFilter.mode(
                     textColor,
                     BlendMode.srcIn,
@@ -93,8 +93,8 @@ class SeatWidget extends StatelessWidget {
                 )
               : SvgPicture.asset(
                   'assets/svg/seat.svg',
-                  width: size,
-                  height: size,
+                  width: !showBorder ? size - 6 : size,
+                  height: !showBorder ? size - 6 : size,
                   // color: backgroundColor,
                   colorFilter: ColorFilter.mode(
                     backgroundColor,

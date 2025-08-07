@@ -334,7 +334,6 @@ class _SeatLayoutState extends State<SeatLayout> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Column(
       children: [
@@ -406,41 +405,6 @@ class _SeatLayoutState extends State<SeatLayout> {
             ),
           ),
         ),
-
-        // Selection summary
-        if (widget.showSelectionSummary && _selectedSeatIds.isNotEmpty) ...[
-          SizedBox(height: widget.sectionSpacing),
-          Card(
-            elevation: widget.cardElevation,
-            margin: widget.cardMargin,
-            color: widget.selectionSummaryCardColor ??
-                colorScheme.primaryContainer,
-            child: Padding(
-              padding: widget.cardPadding,
-              child: Row(
-                children: [
-                  if (widget.selectionSummaryIcon != null)
-                    Icon(
-                      widget.selectionSummaryIcon,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
-                  if (widget.selectionSummaryIcon != null)
-                    const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Selected seats: ${_selectedSeatIds.map((id) => _seats.firstWhere((s) => s.id == id).seatNumber).join(', ')}',
-                      style: widget.selectionSummaryStyle ??
-                          theme.textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onPrimaryContainer,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -528,7 +492,7 @@ class _SeatLayoutState extends State<SeatLayout> {
                 seat: driverSeat,
                 showBorder: true,
                 onTap: () => _onSeatTapped(driverSeat),
-                size: 50,
+                size: widget.seatSize,
               ),
             ),
           ),
@@ -571,8 +535,7 @@ class _SeatLayoutState extends State<SeatLayout> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: leftSeats.map((seat) {
               return Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: widget.seatSpacing / 2),
+                padding: EdgeInsets.symmetric(horizontal: widget.seatSpacing),
                 child: SeatWidget(
                   seat: seat,
                   showBorder: true,
@@ -587,34 +550,7 @@ class _SeatLayoutState extends State<SeatLayout> {
         // Aisle (empty space)
         Expanded(
           flex: (widget.aisleWidthFactor * 1).round(),
-          child: Container(
-            height: widget.seatSize,
-            decoration: BoxDecoration(
-              border: Border.symmetric(
-                vertical: BorderSide(
-                  color: widget.aisleBorderColor ??
-                      Theme.of(context)
-                          .colorScheme
-                          .outline
-                          .withOpacity(widget.aisleBorderOpacity),
-                  width: widget.aisleBorderWidth,
-                ),
-              ),
-            ),
-            child: widget.showAisleIndicators
-                ? Center(
-                    child: Icon(
-                      widget.aisleIndicatorIcon,
-                      color: widget.aisleIndicatorColor ??
-                          Theme.of(context)
-                              .colorScheme
-                              .outline
-                              .withOpacity(0.5),
-                      size: widget.aisleIndicatorSize,
-                    ),
-                  )
-                : null,
-          ),
+          child: const Center(),
         ),
 
         // Right side seats
@@ -624,8 +560,7 @@ class _SeatLayoutState extends State<SeatLayout> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: rightSeats.map((seat) {
               return Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: widget.seatSpacing / 2),
+                padding: EdgeInsets.symmetric(horizontal: widget.seatSpacing),
                 child: SeatWidget(
                   seat: seat,
                   showBorder: true,

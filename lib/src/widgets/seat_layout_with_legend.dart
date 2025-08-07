@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/seat.dart';
 import '../models/seat_status.dart';
 import 'seat_widget.dart';
-import 'seat_legend.dart';
 import 'seat_detail_modal.dart';
 
 /// Main widget that displays seat layout with legend
@@ -83,9 +82,6 @@ class _SeatLayoutWithLegendState extends State<SeatLayoutWithLegend> {
                       }).toList(),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  // Legend
-                  if (widget.showLegend) const SeatLegend(),
                 ],
               ),
             ),
@@ -142,7 +138,7 @@ class _SeatLayoutWithLegendState extends State<SeatLayoutWithLegend> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
